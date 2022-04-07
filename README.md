@@ -1,8 +1,8 @@
-## Nextcloud + OnlyOffice + Let´s Encrypt + Nginx + Samba + Cron + Redis + LibreSign
+## Nextcloud + OnlyOffice + Let´s Encrypt + Nginx
 
-This docker already has everything you need.
+В данной сборке докера есть все необходимое для быстрого запуска Nextcloud версии alpine и настройки SSL с помощью Let´s Encrypt
 
-## Requirements
+## Требования
 
 * Latest version of docker
 * Docker compose
