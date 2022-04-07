@@ -21,92 +21,58 @@
 
 1. Клонировать репозиторий:
 
-    `` ''
-    git clone https://github.com/fakefedya/docker-nextcloud-onlyoffice.git
-    ``''
-    Перейти в директорию:
-        `` ''
-    cd docker-nextcloud-onlyoffice/config
+        git clone https://github.com/fakefedya/docker-nextcloud-onlyoffice.git
     
-2. Change the settings within the ./config folder
+   Перейти в директорию:
+   
+        cd docker-nextcloud-onlyoffice/config
+    
+    
+2. Задать настройки в конфигурационных файлах
+    — mariadb
+    — nextcloud
+    — nginx
 
-3. Build and download:
+3. Загружаем и собираем проект:
 
-    `` ''
-    docker-compose build --pull
-    `` ''
+        docker-compose build --pull
 
-4. Run docker compose:
+4. Запускаем проект:
 
-    `` ''
-    docker-compose up -d
-    `` ''
+        docker-compose up -d
 
-    ** NOTE **: Please wait for the certificates to be generated.
+    ** Внимание **: Процесс может занять продолжительное время.
 
-5. Now start the browser and enter the address of the web server. The Nextcloud wizard web page will open. Enter all the necessary data to complete the wizard.
+5. Если при запуске появляется ошибка: _"Network nginx-proxy declared as external"_, выполняем команду:
 
-6. Go to the project folder and run the `set_configuration.sh` script:
+        docker network create nginx-proxy
+    
+    Проверяем наличие сети nginx-proxy:
+        
+        docker network ls
+        
+    Если сеть есть, повторно запускаем проект:
+    
+        docker-compose up -d
+        
+6. Запускаем браузер и переходим на стартовую страницу nextcloud, выолняем первичные настройки
 
-    ** NOTE **: run the file with ** root ** privileges.
+7. Возвращаемся в директорию проекта и запускаем `set_configuration.sh` скрипт настройки:
 
-    `` ''
-    sudo bash set_config.sh
-    `` ''
-That's it, you already have your own Nextcloud server with onlyoffice included and the SAMBA modules, cron among others, ready to go.
+    ** Внимание **: Скрипт должен быть запущен с правами root.
 
-[1]: http://dev.onlyoffice.org
-[2]: https://github.com/ONLYOFFICE/DocumentServer
-[3]: http://stackoverflow.com/questions/tagged/onlyoffice
+        bash set_config.sh
+    
+8. Радуемся, все готово.
 
+## Возможные ошибки
 
-------------------------------------------------------------------------------------------------------------------------------------------------
+1. Если при открытии страницы Nextcloud видим ошибку _"Доступ через недоверенный домен"_, конфигурируем файл:
 
-## Nextcloud + OnlyOffice + Let´s Encrypt + Nginx + Samba + Cron
+        nano nextcloud/config/config.php
+      
+    Добавляем локальный IP адрес в секцию _"trusted_domains"_, после чего перезапускаем контейнер с Nextcloud
 
-Este docker ya tiene todo lo que necesitas.
-
-## Requerimentos
-
-* Ultima version de docker
-* Docker compose 
-
-
-## Instalacion
-
-1. Clonar la version mas reciente de este repositorio:
-
-    ```
-    git clone https://github.com/Destripador/docker-nextcloud-onlyoffice/
-    cd docker-onlyoffice-nextcloud
-    ```
-2. Cambiar las configuraciones dentro de la carpeta ./config
-
-3. Contruir y descargar:
-
-    ```
-    docker-compose build --pull
-    ```
-
-4. Correr docker compose:
-
-    ```
-    docker-compose up -d
-    ```
-
-    **NOTA**: espere a que se generen los certificados.
-
-5. Ahora inicie el navegador e ingrese la dirección del servidor web. Se abrirá la página web del asistente de Nextcloud. Ingrese todos los datos necesarios para completar el asistente. 
-
-6. Go to the project folder and run the `set_configuration.sh` script:
-
-    **NOTA**: ejecute el archivo con privilegios **root**.
-
-    ```
-    sudo bash set_config.sh
-    ```
-Eso es todo, ya tienes tu propio servidor Nextcloud con onlyoffice incluido y los modulos de SAMBA, cron entre otros, ya listos.
-
-[1]: http://dev.onlyoffice.org
-[2]: https://github.com/ONLYOFFICE/DocumentServer
-[3]: http://stackoverflow.com/questions/tagged/onlyoffice
+2. Если при перезапуске docker на странице Nextcloud появляется ошибка, связанная с redis, добавляем параметр перезапуска контейнера redis в docker-compose.yml:
+      
+        restart: alwaws
