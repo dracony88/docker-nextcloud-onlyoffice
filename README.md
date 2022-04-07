@@ -4,18 +4,30 @@
 
 ## Требования
 
-* Latest version of docker
-* Docker compose
+* Последняя версия docker
+* Последняя версия docker-compose
 
+## Перед началом
 
-## Installation
+Если необходимо остановить и очистить все контейнера:
 
-1. Clone the most recent version of this repository:
+    docker kill $(docker ps -q)
+        
+Удалить все контейнера и кэш
+
+    docker kill $(docker ps -q)
+        
+## Установка
+
+1. Клонировать репозиторий:
 
     `` ''
-    git clone https://github.com/Ripper/docker-nextcloud-onlyoffice/
-    cd docker-onlyoffice-nextcloud
-    `` ''
+    git clone https://github.com/fakefedya/docker-nextcloud-onlyoffice.git
+    ``''
+    Перейти в директорию:
+        `` ''
+    cd docker-nextcloud-onlyoffice/config
+    
 2. Change the settings within the ./config folder
 
 3. Build and download:
