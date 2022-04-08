@@ -76,3 +76,16 @@
 2. Если при перезапуске docker на странице Nextcloud появляется ошибка, связанная с redis, добавляем параметр перезапуска контейнера redis в docker-compose.yml:
       
         restart: alwaws
+        
+3. Работ с  прокси
+
+  'trusted_domains' => 
+  array (
+    0 => 'yourdomain.com',
+  ),
+  'trusted_proxies' => 
+  array (
+    0 => 'yourdomain.com',
+  ),
+  'overwrite.cli.url' => 'https://yourdomain.com',
+  'overwriteprotocol' => 'https',
