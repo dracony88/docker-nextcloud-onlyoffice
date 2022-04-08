@@ -15,7 +15,7 @@
         
 Удалить все контейнера и кэш
 
-    docker kill $(docker ps -q)
+    docker system prune --volumes -a
         
 ## Установка
 
