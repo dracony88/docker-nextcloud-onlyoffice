@@ -1,6 +1,6 @@
-## Nextcloud + OnlyOffice + Let´s Encrypt + Nginx
+## Nextcloud + Nginx + OnlyOffice + Let´s Encrypt + Proxy + Redis
 
-В данной сборке докера есть все необходимое для быстрого запуска Nextcloud версии alpine и настройки SSL с помощью Let´s Encrypt
+В данной сборке докера есть все необходимое для быстрого запуска Nextcloud версии alpine и настройки SSL с помощью Let´s Encrypt. В качестве примера приведена ubuntu server 20.04.
 
 ## Требования
 
@@ -9,7 +9,7 @@
 
 ## Перед началом
 
-Если необходимо остановить и очистить все контейнера:
+Если необходимо остановить и очистить все старые контейнера:
 
     docker kill $(docker ps -q)
         
@@ -19,6 +19,20 @@
         
 ## Установка
 
+1. Устанавилваем docker:
+    Обновляем все пакеты:
+    
+        sudo apt update
+    Затем установливаем несколько необходимых пакетов, которые позволяют использовать пакеты через HTTPS:
+        
+        sudo apt install apt-transport-https ca-certificates curl software-properties-common
+    Добавляем ключ GPG для официального репозитория Docker в нашу систему:
+    
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    Добавляем репозиторий docker в источники APT:
+    
+        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+
 1. Клонировать репозиторий:
 
         git clone https://github.com/fakefedya/docker-nextcloud-onlyoffice.git
@@ -26,7 +40,6 @@
    Перейти в директорию:
    
         cd docker-nextcloud-onlyoffice/config
-    
     
 2. Задать настройки в конфигурационных файлах
     — mariadb
