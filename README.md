@@ -63,6 +63,7 @@
     - mariadb
     - nextcloud
     - nginx
+   
    Загружаем и собираем проект:
 
         docker-compose build --pull
@@ -70,6 +71,7 @@
 
         docker-compose up -d
     ** Внимание **: Процесс может занять продолжительное время.
+    
    Если при запуске появляется ошибка: _"Network nginx-proxy declared as external"_, выполняем команду:
 
         docker network create nginx-proxy
@@ -79,28 +81,34 @@
    Если сеть есть, повторно запускаем проект:
     
         docker-compose up -d     
-   Запускаем браузер и переходим на стартовую страницу nextcloud, выполняем первичные настройки
+   Запускаем браузер и переходим на стартовую страницу nextcloud, авторизуемся.
+   
    Возвращаемся в директорию проекта и запускаем `set_configuration.sh` скрипт настройки:
+   
    ** Внимание **: Скрипт должен быть запущен с правами root.
 
         bash set_config.sh 
-   Радуемся, все готово.
+   На данном этапе сервер запущен, приложение работает, SSL настроено.
 
 ## Возможные ошибки
 
 1. Если при открытии страницы Nextcloud видим ошибку _"Доступ через недоверенный домен"_, конфигурируем файл:
 
-        nano nextcloud/config/config.php
-      
-    Добавляем локальный IP адрес в секцию _"trusted_domains"_, после чего перезапускаем контейнер с Nextcloud
+        nano nextcloud/config/config.php  
+    Добавляем IP адрес / доменное имя в секцию _"trusted_domains"_, после чего перезапускаем контейнер с Nextcloud.
 
-2. Если при перезапуске docker на странице Nextcloud появляется ошибка, связанная с redis, добавляем параметр перезапуска контейнера redis в docker-compose.yml:
+2. Если при перезапуске Docker на странице Nextcloud появляется ошибка, связанная с redis, добавляем параметр перезапуска контейнера redis в docker-compose.yml:
       
         restart: alwaws
-        
-3. Работ с  прокси
 
-  'trusted_domains' => 
+## Решение проблем на странице состояния Nextcloud
+
+1. Если сервер ругается на некорретнонастроенный прокси:
+
+    Конфигурируем файл настроек Nextcloud:
+    
+        nano nextcloud/config/config.php
+  `'trusted_domains' => 
   array (
     0 => 'yourdomain.com',
   ),
@@ -109,4 +117,13 @@
     0 => 'yourdomain.com',
   ),
   'overwrite.cli.url' => 'https://yourdomain.com',
-  'overwriteprotocol' => 'https',
+  'overwriteprotocol' => 'https',`
+    Перезапускаем контейнер Nextcloud.
+
+2. Уведомление о HTTP «X-Frame-Options»
+
+    Конфигурируем файл настроек Nginx:
+    
+        sudo nano /config/nginx/nginx.conf
+    Добавляем `add_header X-Frame-Options "SAMEORIGIN";` в секцию "server".
+    
