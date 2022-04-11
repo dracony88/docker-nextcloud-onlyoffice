@@ -1,11 +1,11 @@
 ## Nextcloud + Nginx + OnlyOffice + Let´s Encrypt + Proxy + Redis
 
-В данной сборке докера есть все необходимое для быстрого запуска Nextcloud версии alpine и настройки SSL с помощью Let´s Encrypt. В качестве примера приведена ubuntu server 20.04.
+В данной сборке Docker есть все необходимое для быстрого запуска Nextcloud версии alpine и настройки SSL с помощью Let´s Encrypt. В качестве примера приведена ubuntu server 20.04.
 
 ## Требования
 
-* Последняя версия docker
-* Последняя версия docker-compose
+* Последняя версия Docker
+* Последняя версия Docker Compose
 
 ## Перед началом
 
@@ -19,11 +19,11 @@
         
 ## Установка
 
-1. Устанавилваем docker:
+1. Устанавливаем и настраиваем Docker и Docker Compose:
     Обновляем все пакеты:
     
         sudo apt update
-    Затем установливаем несколько необходимых пакетов, которые позволяют использовать пакеты через HTTPS:
+    Затем устанавливаем несколько необходимых пакетов, которые позволяют использовать пакеты через HTTPS:
         
         sudo apt install apt-transport-https ca-certificates curl software-properties-common
     Добавляем ключ GPG для официального репозитория Docker в нашу систему:
@@ -32,51 +32,59 @@
     Добавляем репозиторий docker в источники APT:
     
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
-
-1. Клонировать репозиторий:
-
-        git clone https://github.com/fakefedya/docker-nextcloud-onlyoffice.git
+    Обновляем базу данных пакетов и добавляем в нее пакеты Docker из недавно добавленного репозитория:
     
-   Перейти в директорию:
+        sudo apt update
+    Устанавливаем Docker:
+    
+        sudo apt install docker-ce
+    Проверяем статус процесса:
+    
+        sudo systemctl status docker
+    Проверяем текущую версию и обновляем ее при необходимости:
+    
+        sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+    Настроим разрешения:
+        
+        sudo chmod +x /usr/local/bin/docker-compose
+    Проверим версию Docker Compose
+        
+        docker-compose --version
+    Docker и Docker Compose настроены.
+
+2. Начинаем работу с образом
+    Клонируем репозиторий:
+    
+        git clone https://github.com/fakefedya/docker-nextcloud-onlyoffice.git
+    Переходим в директорию:
    
         cd docker-nextcloud-onlyoffice/config
-    
-2. Задать настройки в конфигурационных файлах
-    — mariadb
-    — nextcloud
-    — nginx
-
-3. Загружаем и собираем проект:
+    Конфигурируем файлы настроек:
+    - mariadb
+    - nextcloud
+    - nginx
+   Загружаем и собираем проект:
 
         docker-compose build --pull
-
-4. Запускаем проект:
+   Запускаем проект:
 
         docker-compose up -d
-
     ** Внимание **: Процесс может занять продолжительное время.
-
-5. Если при запуске появляется ошибка: _"Network nginx-proxy declared as external"_, выполняем команду:
+   Если при запуске появляется ошибка: _"Network nginx-proxy declared as external"_, выполняем команду:
 
         docker network create nginx-proxy
-    
-    Проверяем наличие сети nginx-proxy:
+   Проверяем наличие сети nginx-proxy:
         
-        docker network ls
-        
-    Если сеть есть, повторно запускаем проект:
+        docker network ls     
+   Если сеть есть, повторно запускаем проект:
     
-        docker-compose up -d
-        
-6. Запускаем браузер и переходим на стартовую страницу nextcloud, выолняем первичные настройки
+        docker-compose up -d     
+   Запускаем браузер и переходим на стартовую страницу nextcloud, выполняем первичные настройки
+   Возвращаемся в директорию проекта и запускаем `set_configuration.sh` скрипт настройки:
+   ** Внимание **: Скрипт должен быть запущен с правами root.
 
-7. Возвращаемся в директорию проекта и запускаем `set_configuration.sh` скрипт настройки:
-
-    ** Внимание **: Скрипт должен быть запущен с правами root.
-
-        bash set_config.sh
-    
-8. Радуемся, все готово.
+        bash set_config.sh 
+   Радуемся, все готово.
 
 ## Возможные ошибки
 
